@@ -309,7 +309,7 @@ class FreenodeBot(SingleServerIRCBot):
 
 	def saveConfig(self):
 		print 'saveConfig(self)'
-		configFile = open(os.path.expanduser('~/Watchlist bots/BLWatcher.ini'), 'w')
+		configFile = open(os.path.expanduser('~/Watchlist-bots/BLWatcher.ini'), 'w')
 		config.write(configFile)
 		configFile.close()
 		print 'done!'
@@ -431,7 +431,7 @@ class BotThread(threading.Thread):
 def main():  
 	global bot1, rcreader, config
 	config = ConfigParser.ConfigParser()
-	config.read(os.path.expanduser('~/Watchlist bots/BLWatcher.ini'))
+	config.read(os.path.expanduser('~/Watchlist-bots/BLWatcher.ini'))
 	nickname = config.get('Setup', 'nickname')
 	password = config.get('Setup', 'password')
 	mainchannel = config.get('Setup', 'channel')

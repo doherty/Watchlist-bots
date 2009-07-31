@@ -185,7 +185,8 @@ class FreenodeBot(SingleServerIRCBot):
 			elif args[1] == 'optin':
 				who = ' '.join(args[2:])
 				self.addToList(who, 'Setup', 'optin', target)
-			elif args[1] == 'wiki':				newchannel = args[2]
+			elif args[1] == 'wiki':
+				newchannel = args[2]
 				parse = re.compile(r"^#(?P<lang>\w+)\.(?P<family>\w+)$", re.IGNORECASE)
 				lang = parse.search(newchannel).group('lang').lower()
 				family = parse.search(newchannel).group('family').lower()
@@ -207,7 +208,8 @@ class FreenodeBot(SingleServerIRCBot):
 					iwprefix = 'commons'
 				elif lang == 'meta':
 					iwprefix = 'm'
-				config.add_section(newchannel)
+
+				config.add_section(newchannel)
 				self.setConfig(newchannel, 'ignored', '')
 				self.setConfig(newchannel, 'domain', '%s.%s' % (lang, family))
 				self.setConfig(newchannel, 'iwprefix', iwprefix)
@@ -279,7 +281,7 @@ class FreenodeBot(SingleServerIRCBot):
 
 	def saveConfig(self):
 		print 'saveConfig(self)'
-		configFile = open(os.path.expanduser('~/Watchlist bots/BiblioBot.ini'), 'w')
+		configFile = open(os.path.expanduser('~/Watchlist-bots/BiblioBot.ini'), 'w')
 		config.write(configFile)
 		configFile.close()
 		print 'done!'
@@ -402,7 +404,7 @@ class BotThread(threading.Thread):
 def main():  
 	global bot1, rcreader, config    
 	config = ConfigParser.ConfigParser()
-	config.read(os.path.expanduser('~/Watchlist bots/BiblioBot.ini'))
+	config.read(os.path.expanduser('~/Watchlist-bots/BiblioBot.ini'))
 	nickname = config.get('Setup', 'nickname')
 	password = config.get('Setup', 'password')
 	mainchannel = config.get('Setup', 'channel')

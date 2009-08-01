@@ -1,6 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# Bot to watch channels
+#
+# SYNPOPSIS:	This bot parses the RC feed for some projects, and reports to freenode
+# LICENSE:		GPL
+# CREDITS:		Mike.lifeguard, Erwin, Dungodung (Filip Maljkovic)
+#
 
 import sys, os, re, time, string, threading, thread
 import ConfigParser

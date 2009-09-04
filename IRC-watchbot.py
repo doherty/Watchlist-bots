@@ -61,7 +61,7 @@ class FreenodeBot(SingleServerIRCBot):
 		if a[0] == self.nickname:
 			talkintome = True
 		if not talkintome:
-			if e.arguments()[0].lower().startswith("!steward"):
+			if e.arguments()[0].lower().startswith("!admin"):
 				bot1.msg('%s requested attention: %s' % (nick, ', '.join(config.get('Setup', 'optin').split('<|>'))), self.channel)
 			return
 		else:

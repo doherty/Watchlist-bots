@@ -288,7 +288,9 @@ class FreenodeBot(SingleServerIRCBot):
 					print 'Restarting all bots with message: '+quitmsg
 					rawquitmsg = ':'+quitmsg
 					try:
-						rcreader.connection.part(rcfeed)
+						for section in config.sections():
+							if section != 'Setup':
+								rcreader.connection.part(section)
 						rcreader.connection.quit()
 						rcreader.disconnect()
 						BotThread(rcreader).start()
@@ -304,7 +306,9 @@ class FreenodeBot(SingleServerIRCBot):
 				elif cmd == 'restart rc':
 					self.msg('Restarting rc reader', target)
 					try:
-						rcreader.connection.part(rcfeed)
+						for section in config.sections():
+							if section != 'Setup':
+								rcreader.connection.part(section)
 						rcreader.connection.quit()
 						rcreader.disconnect()
 						BotThread(rcreader).start()

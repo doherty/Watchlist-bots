@@ -247,18 +247,19 @@ class FreenodeBot(SingleServerIRCBot):
 				self.connection.action(self.channel, 'huggles ' + who)
 			if not who:
 				self.msg('lolfail', target)
-		elif args[0] == 'die':#Die
+		elif cmd.startswith('die'):#Die
 			if self.getCloak(e.source()) not in config.get('Setup', 'owner').split('<|>'):
 				self.msg('You can\'t kill me; you\'re not my owner!', nm_to_n(e.source()))
 			else:
 				print 'Yes, you\'re my owner.'
-				if len(args)>=2:
-					quitmsg = ' '.join(args[1:])
-				else:
+				if cmd == 'die':
 					quitmsg = config.get('Setup', 'quitmsg')
-				self.saveConfig()
-				print 'Saved config. Now killing all bots with message: "' + quitmsg + '"...'
+				else:
+					parse = re.compile(r"^die (?P<quitmsg>.*)$", re.IGNORECASE)
+					quitmsg = parse.search(cmd).group('quitmsg').strip()
 				rawquitmsg = ':'+quitmsg
+				self.saveConfig()
+				print 'Saved config. Now killing all bots with message: "%s"...' % quitmsg
 				bot1.connection.part(bot1.channel, rawquitmsg)
 				bot1.connection.quit(rawquitmsg)
 				bot1.disconnect()
@@ -269,6 +270,44 @@ class FreenodeBot(SingleServerIRCBot):
 				rcreader.disconnect()
 				print 'Killed. Now exiting...'
 				os._exit(os.EX_OK)
+		elif cmd.startswith('restart'):
+			if self.getCloak(e.source()) not in config.get('Setup', 'owner').split('<|>'):
+				self.msg('You can\'t restart me; you\'re not my owner!', target)
+			else:
+				print 'Yes, you\'re my owner'
+				self.saveConfig()
+				print 'Saved config for paranoia.'
+				if cmd == 'restart':
+					quitmsg = config.get('Setup', 'quitmsg')
+					print 'Restarting all bots with message: '+quitmsg
+					rawquitmsg = ':'+quitmsg
+					try:
+						for section in config.sections():
+							if section != 'Setup':
+								rcreader.connection.part(section)
+						rcreader.connection.quit()
+						rcreader.disconnect()
+						BotThread(rcreader).start()
+					except:
+						print 'rcreader didn\'t recover: %s' % sys.exc_info()[1]
+					try:
+						bot1.connection.part(mainchannel, rawquitmsg)
+						bot1.connection.quit()
+						bot1.disconnect()
+						BotThread(bot1).start()
+					except:
+						print 'bot1 didn\'t recover: %s' % sys.exc_info()[1]
+				elif cmd == 'restart rc':
+					self.msg('Restarting rc reader', target)
+					try:
+						for section in config.sections():
+							if section != 'Setup':
+								rcreader.connection.part(section)
+						rcreader.connection.quit()
+						rcreader.disconnect()
+						BotThread(rcreader).start()
+					except:
+						print 'rcreader didn\'t recover: %s' % sys.exc_info()[1]
 
 	def saveConfig(self):
 		print 'saveConfig(self)'

@@ -1,5 +1,5 @@
 [Setup]
-help = This bot watches spam blacklists. The manual is located at [[m:User:Mike.lifeguard/BLWatcher]].
+help = This bot watches spam blacklists. The manual is located at \x0302http://toolserver.org/~lifeguard/docs/stewardbots/IRC-watchbot\x03
 optin = Mike_lifeguard<|>Beetstra<|>erwin85
 server = irc.freenode.net
 wmserver = irc.wikimedia.org

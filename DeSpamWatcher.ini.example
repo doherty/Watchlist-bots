@@ -1,5 +1,5 @@
 [Setup]
-help = This bot watches important pages on English Wikibooks. The manual is located at [[m:User:Mike.lifeguard/DeSpamWatcher]].
+help = This bot watches important pages on English Wikibooks. The manual is located at \x0302http://toolserver.org/~lifeguard/docs/stewardbots/IRC-watchbot\x03.
 optin = 
 server = irc.freenode.net
 wmserver = irc.wikimedia.org

@@ -1,5 +1,5 @@
 [Setup]
-help = This bot watches important pages on English Wikibooks. The manual is located at [[m:User:Mike.lifeguard/The_Hawk]].
+help = This bot watches important pages on English Wikibooks. The manual is located at \x0302http://toolserver.org/~lifeguard/docs/stewardbots/IRC-watchbot\x03
 optin = Mike_lifeguard<|>wknight8111<|>Neoptol3mus<|>darkcode<|>Az1568<|>webaware<|>R-eece
 server = irc.freenode.net
 wmserver = irc.wikimedia.org

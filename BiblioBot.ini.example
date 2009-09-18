@@ -1,11 +1,11 @@
 [Setup]
 nickname = BiblioBot
-help = Este bot controla los cambios de páginas importantes en Wikipedia en Español. Puede encontrar su manual en http://toolserver.org/~lifeguard/docs/stewardbots/IRC-watchbot
+help = Este bot controla los cambios de páginas importantes en Wikipedia en Español. Puede encontrar su manual en http://toolserver.org/~stewardbots/docs/IRC-watchbot
 server = irc.freenode.net
 wmserver = irc.wikimedia.org
-owner = wikibooks/mike.lifeguard
+owner = wikimedia/mikelifeguard
 password = 
-privileged = wikibooks/mike.lifeguard<|>Wikimedia/Dferg
+privileged = wikimedia/mikelifeguard<|>Wikimedia/Dferg
 channel = #cvn-wp-es
 optin = Mike_lifeguard<|>Dferg
 quitmsg = Adiós!

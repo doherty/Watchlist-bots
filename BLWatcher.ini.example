@@ -1,12 +1,12 @@
 [Setup]
-help = This bot watches spam blacklists. The manual is located at http://toolserver.org/~lifeguard/docs/stewardbots/IRC-watchbot
+help = This bot watches spam blacklists. The manual is located at http://toolserver.org/~stewardbots/docs/IRC-watchbot
 optin = Mike_lifeguard<|>Beetstra<|>erwin85
 server = irc.freenode.net
 wmserver = irc.wikimedia.org
-owner = wikibooks/mike.lifeguard
+owner = wikimedia/mikelifeguard
 password = 
 nickname = BLWatcher
-privileged = wikibooks/mike.lifeguard<|>wikimedia/nixeagle<|>wikimedia/beetstra<|>wikimedia/dferg
+privileged = wikimedia/mikelifeguard<|>wikimedia/nixeagle<|>wikimedia/beetstra<|>wikimedia/dferg
 channel = #wikimedia-external-links
 quitmsg = Goodbye!
 

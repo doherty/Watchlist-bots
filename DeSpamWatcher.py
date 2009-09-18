@@ -71,7 +71,7 @@ class FreenodeBot(SingleServerIRCBot):
 						self.do_command(e, command, target)
 					except:
 						print 'Error: %s' % sys.exc_info()[1]
-						self.msg('You have to follow the proper syntax. See \x0302http://toolserver.org/~lifeguard/docs/stewardbots/IRC-watchbot\x03.', nick)
+						self.msg('You have to follow the proper syntax. See \x0302http://toolserver.org/~stewardbots/docs/IRC-watchbot\x03', nick)
 		
 	def on_pubmsg(self, c, e):
 		timestamp = '[%s] ' % time.strftime('%d.%m.%Y %H:%M:%S', time.localtime(time.time()))
@@ -93,7 +93,7 @@ class FreenodeBot(SingleServerIRCBot):
 						self.do_command(e, command, target)
 					except:
 						print 'Error: %s' % sys.exc_info()[1]
-						self.msg('You have to follow the proper syntax. See \x0302http://toolserver.org/~lifeguard/docs/stewardbots/IRC-watchbot\x03.', nick)
+						self.msg('You have to follow the proper syntax. See \x0302http://toolserver.org/~stewardbots/docs/IRC-watchbot\x03', nick)
 			
 	def do_command(self, e, cmd, target):
 		nick = nm_to_n(e.source())

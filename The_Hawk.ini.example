@@ -1,12 +1,12 @@
 [Setup]
-help = This bot watches important pages on English Wikibooks. The manual is located at http://toolserver.org/~lifeguard/docs/stewardbots/IRC-watchbot
+help = This bot watches important pages on English Wikibooks. The manual is located at http://toolserver.org/~stewardbots/docs/IRC-watchbot
 optin = Mike_lifeguard<|>wknight8111<|>Neoptol3mus<|>darkcode<|>Az1568<|>webaware<|>R-eece
 server = irc.freenode.net
 wmserver = irc.wikimedia.org
-owner = wikibooks/mike.lifeguard
+owner = wikimedia/mikelifeguard
 password = 
 nickname = The_Hawk
-privileged = wikibooks/mike.lifeguard<|>wikibooks/reece<|>wikimedia/az1568<|>wikimedia/bastique
+privileged = wikimedia/mikelifeguard<|>wikibooks/reece<|>wikimedia/az1568<|>wikimedia/bastique
 channel = #wikibooks
 quitmsg = Goodbye!
 

@@ -102,18 +102,18 @@ class FreenodeBot(SingleServerIRCBot):
 		if args[0] == '_':
 			args.remove('_')
 
-		if args[0] == 'test' or args[0] == 'prueba':#Notifications
-			self.msg('Prueba.', nick)
-		elif args[0] == 'help' or args[0] == 'ayuda':
+		if args[0] == 'test':#Notifications
+			self.msg('Testing.', nick)
+		elif args[0] == 'help':
 			self.msg(config.get('Setup', 'help'), nick)
-		elif args[0] == 'report' or args[0] == 'reporta':#Set report levels
-			if args[1] == 'list' or args[1] == 'lista':
+		elif args[0] == 'report':#Set report levels
+			if args[1] == 'list':
 				message = ''
 				for section in config.sections():
 					if section != 'Setup':
 						message += '%s: %s; ' % (section, config.get(section, 'report'))
 				self.msg(message, target)
-			elif args[1] == 'all' or args[1] == 'todo':
+			elif args[1] == 'all':
 				if args[2] == 'False':
 					level = 'False'
 				else:
@@ -121,30 +121,30 @@ class FreenodeBot(SingleServerIRCBot):
 				for section in config.sections():
 					if section != 'Setup':
 						self.setConfig(section, 'report', level)
-				self.msg('Seleccionando el nivel de reporte para todos canales configurados a %s.' % level, target)
-			elif args[1] == 'esonly':
+				self.msg('Setting report level for all configured channels to %s.' % level, target)
+			elif args[1] == 'enonly':
 				for section in config.sections():
-					if section != 'Setup' and section != '#es.wikipedia':
+					if section != 'Setup' and section != '#en.wikisource':
 						self.setConfig(section, 'report', 'False')
-				self.msg('Seleccionando el nivel de reporte para todos los canales configurados excepto #es.wikipedia a No.', target)
+				self.msg('Setting report level for all configured channels except #en.wikisource to False.', target)
 			elif config.has_section(args[1]):
 				if args[2] == 'False':
 					level = 'False'
 				else:
 					level = 'True'
 				self.setConfig(args[1], 'report', level)
-				self.msg('Seleccionando el nivel de reporte para %s a %s' % (args[1], level), target)
+				self.msg('Setting report level for %s to %s.' % (args[1], level), target)
 			else:
-				self.msg('Tiene que especificar un canal. Use el nombre del canal irc.wikimedia.org, "all" or "esonly".', target)
-		elif args[0] == 'list' or args[0] == 'lista':#Lists: modify and show
-			if args[1] == 'report' or args[1] == 'reporta':
+				self.msg('You have to specify a channel. Use irc.wikimedia.org\'s channel name, "all" or "enonly".', target)
+		elif args[0] == 'list':#Lists: modify and show
+			if args[1] == 'report':
 				message = ''
 				for section in config.sections():
 					if section != 'Setup':
 						message += '%s: %s; ' % (section, config.get(section, 'report'))
 				self.msg(message, target)
-			elif args[1] == 'privileged' or args[1] == 'privilegiado':
-				self.msg('Cloacks con acceso al bot: %s' % ', '.join(config.get('Setup', 'privileged').split('<|>')), nick)
+			elif args[1] == 'privileged':
+				self.msg('Privileged cloaks: %s' % ', '.join(config.get('Setup', 'privileged').split('<|>')), nick)
 			elif args[1] == 'optin':
 				self.msg('Admins: %s' % ', '.join(config.get('Setup', 'optin').split('<|>')), nick)
 			elif args[1] == 'wiki':
@@ -152,38 +152,25 @@ class FreenodeBot(SingleServerIRCBot):
 				for section in config.sections():
 					if section != 'Setup':
 						wikis.append(section)
-				self.msg('Monitorizando: %s' % ', '.join(wikis), target)
-			elif args[1] == 'ignored' or args[1] == 'ignorado':
-				if config.has_section(args[2]):
-					self.msg('Usuarios ignorados: %s' % ', '.join(config.get(args[2], 'ignored').split('<|>')), target)
-			elif args[1] == 'stalked' or args[1] == 'monitorizado':
-				if config.has_section(args[2]):
-					pages = config.get(args[2], 'stalked').split('<|>')
-					if len(pages) != 0:
-						shortlists = ['']
-						index = 0
-						maxlen = 400
-						print pages
-						for page in pages:
-							print shortlists
-							if len(shortlists[index]) + len(page) < maxlen:
-								#append to the string at index
-								if len(shortlists[index]) > 1:#if there's stuff there already, we want a comma
-									shortlists[index]+=', '+page
-								else:
-									shortlists[index]+=page
-							else:
-								#increment index and then append there
-								shortlists.append('')
-								index+=1
-								print index
-								shortlists[index]+=page
-						print 'done first for loop'
-						for l in range(0, len(shortlists)):
-							self.msg(r'Páginas monitorizadas (%s/%s): %s.' % (l+1, len(shortlists), shortlists[l]), target)
-							time.sleep(2)#sleep a bit to avoid flooding?
-		elif args[0] == 'add' or args[0] == 'añade':
-			if args[1] == 'privileged' or args[1] == 'privilegiado':
+				self.msg('Watching: %s' % ', '.join(wikis), target)
+			elif args[2] == 'ignored':
+				if config.has_section(args[1]):
+					self.msg('Ignored users: %s' % ', '.join(config.get(args[1], 'ignored').split('<|>')), target)
+			elif args[2] == 'stalked':
+				if config.has_section(args[1]):
+					stalked = config.get(args[1], 'stalked').split('<|>')
+					shortlists = []
+					maxlen = 10
+					iters = int(math.ceil(float(len(stalked))/maxlen))
+					for x in range(0, iters):
+						lower = x*maxlen
+						upper = (x+1)*maxlen
+						shortlists.append(stalked[lower:upper])
+					for l in range(0, len(shortlists)):
+						self.msg(r'%s %s (%s/%s): %s.' % (args[1], args[2], l+1, len(shortlists), ", ".join(shortlists[l])), target)
+						time.sleep(1)#sleep a bit to avoid flooding?
+		elif args[0] == 'add':
+			if args[1] == 'privileged':
 				who = ' '.join(args[2:])
 				self.addToList(who, 'Setup', 'privileged', target)
 			elif args[1] == 'optin':
@@ -223,16 +210,16 @@ class FreenodeBot(SingleServerIRCBot):
 				rcreader.connection.join(newchannel)
 				self.msg('Monitoring %s' % newchannel, target)
 			elif config.has_section(args[1]):
-				if args[2] == 'ignored' or args[2] == 'ignorado':
+				if args[2] == 'ignored':
 					who = ' '.join(args[3:])
 					who = who[:1].upper()+who[1:]
 					self.addToList(who, args[1], 'ignored', target)
-				elif args[2] == 'stalked' or args[2] == 'monitorizado':
+				elif args[2] == 'stalked':
 					who = ' '.join(args[3:])
 					who = who[:1].upper()+who[1:]
 					self.addToList(who, args[1], 'stalked', target)
-		elif args[0] == 'remove' or args[0] == 'quita':
-			if args[1] == 'privileged' or args[1] == 'privilegiado':
+		elif args[0] == 'remove':
+			if args[1] == 'privileged':
 				who = ' '.join(args[2:])
 				self.removeFromList(who, 'Setup', 'privileged', target)
 			if args[1] == 'optin':
@@ -242,15 +229,15 @@ class FreenodeBot(SingleServerIRCBot):
 				#Removing is not possible, so set report to False
 				if config.has_section(args[2]):
 					self.setConfig(args[2], 'report', 'False')
-					self.msg('Eso todavía no está funcionando, De todos modos el nivel de reporte para este canal ha sido programado a No.', target)
+					self.msg('This isn\'t working yet. However the report level for this channel has been set to False.', channel)
 				else:
-					self.msg('Dicho canal no existe: %s.' % args[1], target)
+					self.msg('No such channel: %s.' % args[1], target)
 			elif config.has_section(args[1]):
-				if args[2] == 'ignored' or args[2] == 'ignorado':
+				if args[2] == 'ignored':
 					who = ' '.join(args[3:])
 					who = who[:1].upper()+who[1:]
 					self.removeFromList(who, args[1], 'ignored', target)
-				elif args[2] == 'stalked' or args[2] == 'monitorizado':
+				elif args[2] == 'stalked':
 					who = ' '.join(args[3:])
 					who = who[:1].upper()+who[1:]
 					self.removeFromList(who, args[1], 'stalked', target)
@@ -324,7 +311,7 @@ class FreenodeBot(SingleServerIRCBot):
 
 	def saveConfig(self):
 		print 'saveConfig(self)'
-		configFile = open(os.path.expanduser('~/Watchlist-bots/BiblioBot.ini'), 'w')
+		configFile = open(os.path.expanduser('~/Watchlist-bots/sourceybot.ini'), 'w')
 		config.write(configFile)
 		configFile.close()
 		print 'done!'
@@ -358,7 +345,7 @@ class FreenodeBot(SingleServerIRCBot):
 			self.msg('%s removed from %s.' % (who, groupname), target)
 
 	def msg(self, message, target=None):
-##		print 'msg(self, \'%s\', \'%s\')' % (message, target)
+##        print 'msg(self, \'%s\', \'%s\')' % (message, target)
 		if not target:
 			target = self.channel
 		self.connection.privmsg(target, message)
@@ -445,9 +432,9 @@ class BotThread(threading.Thread):
 		bot.start()
 
 def main():  
-	global bot1, rcreader, config    
+	global bot1, rcreader, config
 	config = ConfigParser.ConfigParser()
-	config.read(os.path.expanduser('~/Watchlist-bots/BiblioBot.ini'))
+	config.read(os.path.expanduser('~/Watchlist-bots/sourceybot.ini'))
 	nickname = config.get('Setup', 'nickname')
 	password = config.get('Setup', 'password')
 	mainchannel = config.get('Setup', 'channel')
@@ -457,6 +444,7 @@ def main():
 	for section in config.sections():
 		if section != 'Setup':
 			channels.append(section)
+	
 	bot1 = FreenodeBot(mainchannel, nickname, mainserver, password, 6667)
 	BotThread(bot1).start()
 	rcreader = WikimediaBot(channels, nickname, wmserver, 6667)
@@ -464,7 +452,7 @@ def main():
 
 if __name__ == "__main__":
 	global bot1, rcreader, config
-#	main()
+#    main()
 	try:
 		main()
 	except:
@@ -472,3 +460,4 @@ if __name__ == "__main__":
 		bot1.die()
 		rcreader.die()
 		sys.exit()
+

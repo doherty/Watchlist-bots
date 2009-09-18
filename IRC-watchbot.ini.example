@@ -1,12 +1,12 @@
 [Setup]
-help = This bot stalks the 2009 Wikimedia steward elections. The manual is located at http://toolserver.org/~lifeguard/docs/stewardbots/IRC-watchbot
+help = This bot stalks the 2009 Wikimedia steward elections. The manual is located at http://toolserver.org/~stewardbots/docs/IRC-watchbot
 optin = Mike_lifeguard
 server = irc.freenode.net
 wmserver = irc.wikimedia.org
-owner = wikibooks/mike.lifeguard
+owner = wikimedia/mikelifeguard
 password = 
 nickname = IRC-watchbot
-privileged = wikibooks/mike.lifeguard
+privileged = wikimedia/mikelifeguard
 channel = #wikimedia-stewards-elections
 quitmsg = Goodbye!
 

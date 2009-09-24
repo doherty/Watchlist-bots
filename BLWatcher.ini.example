@@ -1,5 +1,5 @@
 [Setup]
-help = This bot watches spam blacklists. The manual is located at http://toolserver.org/~stewardbots/docs/IRC-watchbot
+help = This bot watches spam blacklists. The manual is located at http://toolserver.org/~stewardbots/IRC-watchbot
 optin = Mike_lifeguard<|>Beetstra<|>erwin85
 server = irc.freenode.net
 wmserver = irc.wikimedia.org

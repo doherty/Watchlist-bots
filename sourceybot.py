@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 #
 # SYNPOPSIS:	This bot parses the RC feed for some projects, and reports to freenode

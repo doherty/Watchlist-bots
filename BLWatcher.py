@@ -245,7 +245,7 @@ class FreenodeBot(SingleServerIRCBot):
 				else:
 					self.msg('No such channel: %s.' % rc, target)
 			elif type == 'ignored' or type == 'stalked':
-				parse = re.compile(r"^remove (?P<what>ignored|stalked) #(?P<rc>.*) (?P<who>.*)$", re.IGNORECASE)
+				parse = re.compile(r"^remove (?P<what>ignored|stalked) #(?P<rc>\w+\.\w+) (?P<who>.*)$", re.IGNORECASE)
 				what = parse.search(cmd).group('what').lower()
 				rc = '#' + parse.search(cmd).group('rc').strip()
 				if config.has_section(rc):

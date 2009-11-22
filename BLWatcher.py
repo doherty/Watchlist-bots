@@ -68,6 +68,7 @@ class FreenodeBot(SingleServerIRCBot):
 				command = a[1].strip()
 				if self.getCloak(e.source()) in config.get('Setup', 'privileged').split('<|>'):
 					try:
+                        print 'Command from %s: %s' % (who, command)
 						self.do_command(e, command, target)
 					except:
 						print 'Error: %s' % sys.exc_info()[1]
@@ -90,6 +91,7 @@ class FreenodeBot(SingleServerIRCBot):
 				command = a[1].strip()
 				if self.getCloak(e.source()) in config.get('Setup', 'privileged').split('<|>'):
 					try:
+                        print 'Command from %s: %s' % (who, command)
 						self.do_command(e, command, target)
 					except:
 						print 'Error: %s' % sys.exc_info()[1]

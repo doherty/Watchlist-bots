@@ -40,7 +40,7 @@ class FreenodeBot(SingleServerIRCBot):
 
 	def on_ctcp(self, c, e):
 		if e.arguments()[0] == "VERSION":
-			c.ctcp_reply(nm_to_n(e.source()),"Bot for watching stuff in " + self.channel)
+			c.ctcp_reply(nm_to_n(e.source()),"Bot for watching spam stuff in " + self.channel)
 		elif e.arguments()[0] == "PING":
 			if len(e.arguments()) > 1: c.ctcp_reply(nm_to_n(e.source()),"PING " + e.arguments()[1])
 
@@ -98,87 +98,102 @@ class FreenodeBot(SingleServerIRCBot):
 	def do_command(self, e, cmd, target):
 		nick = nm_to_n(e.source())
 		c = self.connection
-		args = cmd.split(' ')
-		if args[0] == '_':
-			args.remove('_')
 
-		if args[0] == 'test':#Notifications
+		if cmd.startswith('test'):#Notifications
 			self.msg('Testing.', nick)
-		elif args[0] == 'help':
+		elif cmd.startswith('help'):
 			self.msg(config.get('Setup', 'help'), nick)
-		elif args[0] == 'report':#Set report levels
-			if args[1] == 'list':
-				message = ''
+		elif cmd.startswith('report'):#Set report levels
+			parse = re.compile(r"^report (?P<type>list|all|metaonly|#)", re.IGNORECASE)
+			type = parse.search(cmd).group('type').lower()
+			if type == 'list':
+				message = []
 				for section in config.sections():
 					if section != 'Setup':
-						message += '%s: %s; ' % (section, config.get(section, 'report'))
-				self.msg(message, target)
-			elif args[1] == 'all':
-				if args[2] == 'False':
-					level = 'False'
-				else:
-					level = 'True'
+						message.append('%s: %s' % (section, config.get(section, 'report')))
+				self.msg('; '.join(message), target)
+			elif type == 'all':
+				parse = re.compile(r"^report all (?P<value>true|false)$", re.IGNORECASE)
+				value = parse.search(cmd).group('value').upper()
+				if value == 'FALSE':
+					level = 'FALSE'
+				elif value == 'TRUE':
+					level = 'TRUE'
+				if level == 'TRUE' or level == 'FALSE':
+					for section in config.sections():
+						if section != 'Setup':
+							self.setConfig(section, 'report', level)
+					self.msg('Setting report level for all configured channels to %s.' % level, target)
+			elif type == 'metaonly':
+				for section in config.sections():
+					if section != 'Setup' and section != '#meta.wikimedia':
+						self.setConfig(section, 'report', 'FALSE')
+				self.msg('Setting report level for all configured channels except #meta.wikimedia to FALSE.', target)
+			elif type == '#':
+				parse = re.compile(r"^report #(?P<rc>.*) (?P<value>true|false)$", re.IGNORECASE)
+				rc = '#'+parse.search(cmd).group('rc').lower()
+				value = parse.search(cmd).group('value').upper()
+				if config.has_section(rc).strip():
+					if value == 'FALSE':
+						level = 'FALSE'
+					else:
+						level = 'TRUE'
+				self.setConfig(rc, 'report', level)
+				self.msg('Setting report level for %s to %s.' % (rc, level), target)
+		elif cmd.startswith('list'):#Lists: modify and show
+			parse = re.compile(r"^list (?P<type>report|privileged|optin|wikis?|ignored|stalked)", re.IGNORECASE)
+			type = parse.search(cmd).group('type').lower()
+			if type == 'report':
+				message = []
 				for section in config.sections():
 					if section != 'Setup':
-						self.setConfig(section, 'report', level)
-				self.msg('Setting report level for all configured channels to %s.' % level, target)
-			elif args[1] == 'enonly':
-				for section in config.sections():
-					if section != 'Setup' and section != '#en.wikisource':
-						self.setConfig(section, 'report', 'False')
-				self.msg('Setting report level for all configured channels except #en.wikisource to False.', target)
-			elif config.has_section(args[1]):
-				if args[2] == 'False':
-					level = 'False'
-				else:
-					level = 'True'
-				self.setConfig(args[1], 'report', level)
-				self.msg('Setting report level for %s to %s.' % (args[1], level), target)
-			else:
-				self.msg('You have to specify a channel. Use irc.wikimedia.org\'s channel name, "all" or "enonly".', target)
-		elif args[0] == 'list':#Lists: modify and show
-			if args[1] == 'report':
-				message = ''
-				for section in config.sections():
-					if section != 'Setup':
-						message += '%s: %s; ' % (section, config.get(section, 'report'))
-				self.msg(message, target)
-			elif args[1] == 'privileged':
-				self.msg('Privileged cloaks: %s' % ', '.join(config.get('Setup', 'privileged').split('<|>')), nick)
-			elif args[1] == 'optin':
-				self.msg('Admins: %s' % ', '.join(config.get('Setup', 'optin').split('<|>')), nick)
-			elif args[1] == 'wiki':
+						message.append('%s: %s' % (section, config.get(section, 'report')))
+				self.msg('; '.join(message), target)
+			elif type == 'privileged' or type == 'optin':
+				self.msg('%s: %s' % (type, ', '.join(config.get('Setup', type).split('<|>'))), nick)
+			elif type == 'wiki' or type == 'wikis':
 				wikis = []
 				for section in config.sections():
 					if section != 'Setup':
 						wikis.append(section)
 				self.msg('Watching: %s' % ', '.join(wikis), target)
-			elif args[2] == 'ignored':
-				if config.has_section(args[1]):
-					self.msg('Ignored users: %s' % ', '.join(config.get(args[1], 'ignored').split('<|>')), target)
-			elif args[2] == 'stalked':
-				if config.has_section(args[1]):
-					stalked = config.get(args[1], 'stalked').split('<|>')
+			elif type == 'stalked' or type == 'ignored':
+				parse = re.compile(r"^list (?P<type>stalked|ignored) #(?P<rc>.*)$", re.IGNORECASE)
+				rc = '#' + parse.search(cmd).group('rc').strip().lower()
+				if config.has_section(rc):
+					longlist = config.get(rc, type).split('<|>')
 					shortlists = []
 					maxlen = 10
-					iters = int(math.ceil(float(len(stalked))/maxlen))
+					iters = int(math.ceil(float(len(longlist))/maxlen))
 					for x in range(0, iters):
 						lower = x*maxlen
 						upper = (x+1)*maxlen
-						shortlists.append(stalked[lower:upper])
+						shortlists.append(longlist[lower:upper])
 					for l in range(0, len(shortlists)):
-						self.msg(r'%s %s (%s/%s): %s.' % (args[1], args[2], l+1, len(shortlists), ", ".join(shortlists[l])), target)
-						time.sleep(1)#sleep a bit to avoid flooding?
-		elif args[0] == 'add':
-			if args[1] == 'privileged':
-				who = ' '.join(args[2:])
-				self.addToList(who, 'Setup', 'privileged', target)
-			elif args[1] == 'optin':
-				who = ' '.join(args[2:])
-				self.addToList(who, 'Setup', 'optin', target)
-			elif args[1] == 'wiki':
-				newchannel = args[2]
-				parse = re.compile(r"^#(?P<lang>\w+)\.(?P<family>\w+)$", re.IGNORECASE)
+						self.msg(r'%s %s (%s/%s): %s.' % (rc, type, l+1, len(shortlists), ", ".join(shortlists[l])), target)
+				else:
+					self.msg('No such channel as %s.' % rc, target)
+		elif cmd.startswith('add'):
+			parse = re.compile(r"^add (?P<type>privileged|optin|wiki|ignored|stalked)", re.IGNORECASE)
+			type = parse.search(cmd).group('type').lower()
+			if type == 'privileged' or type == 'optin':
+				parse = re.compile(r"^add (?:privileged|optin) (?P<who>.+)", re.IGNORECASE)
+				who = parse.search(cmd).group('who').strip()
+				self.addToList(who, 'Setup', type, target)
+			elif type == 'ignored' or type == 'stalked':
+				parse = re.compile(r"^add (?P<what>ignored|stalked) #(?P<rc>\w+\.\w+) (?P<who>.+)$", re.IGNORECASE)
+				rc = '#' + parse.search(cmd).group('rc').lower()
+				if config.has_section(rc):
+					who = parse.search(cmd).group('who')
+					what = parse.search(cmd).group('what').lower()
+					self.addToList(who, rc, what, target)
+				else:
+					self.msg('No such channel as %s' % rc, target)
+			elif type == 'wiki':
+				parse = re.compile(r"^add wiki #(?P<rc>\w+\.\w+)$", re.IGNORECASE)
+				newchannel = parse.search(cmd).group('rc').lower()
+
+				parse = re.compile(r"^(?P<lang>\w+)\.(?P<family>\w+)$", re.IGNORECASE)
 				lang = parse.search(newchannel).group('lang').lower()
 				family = parse.search(newchannel).group('family').lower()
 				if family == 'wikipedia':
@@ -200,53 +215,44 @@ class FreenodeBot(SingleServerIRCBot):
 				elif lang == 'meta':
 					iwprefix = 'm'
 
-				config.add_section(newchannel)
-				self.setConfig(newchannel, 'ignored', '')
-				self.setConfig(newchannel, 'domain', '%s.%s' % (lang, family))
-				self.setConfig(newchannel, 'iwprefix', iwprefix)
-				self.setConfig(newchannel, 'stalked', 'MediaWiki:Spam-blacklist<|>MediaWiki talk:Spam-blacklist')
-				self.setConfig(newchannel, 'report', 'True')
+				section = '#%s' % newchannel
+				config.add_section(section)
+				self.setConfig(section, 'ignored', '')
+				self.setConfig(section, 'domain', newchannel)
+				self.setConfig(section, 'iwprefix', iwprefix)
+				self.setConfig(section, 'stalked', 'MediaWiki:Spam-blacklist<|>MediaWiki talk:Spam-blacklist')
+				self.setConfig(section, 'report', 'True')
 				self.saveConfig()
-				rcreader.connection.join(newchannel)
-				self.msg('Monitoring %s' % newchannel, target)
-			elif config.has_section(args[1]):
-				if args[2] == 'ignored':
-					who = ' '.join(args[3:])
-					who = who[:1].upper()+who[1:]
-					self.addToList(who, args[1], 'ignored', target)
-				elif args[2] == 'stalked':
-					who = ' '.join(args[3:])
-					who = who[:1].upper()+who[1:]
-					self.addToList(who, args[1], 'stalked', target)
-		elif args[0] == 'remove':
-			if args[1] == 'privileged':
-				who = ' '.join(args[2:])
-				self.removeFromList(who, 'Setup', 'privileged', target)
-			if args[1] == 'optin':
-				who = ' '.join(args[2:])
-				self.removeFromList(who, 'Setup', 'optin', target)
-			elif args[1] == 'wiki':
+				rcreader.connection.join(section)
+				self.msg('Monitoring %s' % section, target)
+		elif cmd.startswith('remove'):
+			parse = re.compile(r"^remove (?P<type>privileged|optin|report|ignored|stalked|wiki)", re.IGNORECASE)
+			type = parse.search(cmd).group('type')
+			if type == 'privileged' or type == 'optin':
+				parse = re.compile(r"^remove (?P<what>privileged|optin) (?P<who>.*)$", re.IGNORECASE)
+				who = parse.search(cmd).group('who').strip()
+				what = parse.search(cmd).group('what').strip()
+				self.removeFromList(who, 'Setup', what, target)
+			elif type == 'wiki':
 				#Removing is not possible, so set report to False
-				if config.has_section(args[2]):
-					self.setConfig(args[2], 'report', 'False')
-					self.msg('This isn\'t working yet. However the report level for this channel has been set to False.', channel)
+				parse = re.compile(r"^remove wiki #(?P<rc>.*)$", re.IGNORECASE)
+				rc = '#' + parse.search(cmd).group('rc').strip()
+				if config.has_section(rc):
+					self.setConfig(rc, 'report', 'FALSE')
+					self.msg('This isn\'t working yet. However the report level for %s has been set to FALSE.' % rc, channel)
 				else:
-					self.msg('No such channel: %s.' % args[1], target)
-			elif config.has_section(args[1]):
-				if args[2] == 'ignored':
-					who = ' '.join(args[3:])
-					who = who[:1].upper()+who[1:]
-					self.removeFromList(who, args[1], 'ignored', target)
-				elif args[2] == 'stalked':
-					who = ' '.join(args[3:])
-					who = who[:1].upper()+who[1:]
-					self.removeFromList(who, args[1], 'stalked', target)
-		elif args[0] == 'huggle':#Huggle
-			if args[1]:
-				who = args[1]
-				self.connection.action(self.channel, 'huggles ' + who)
-			if not who:
-				self.msg('lolfail', target)
+					self.msg('No such channel: %s.' % rc, target)
+			elif type == 'ignored' or type == 'stalked':
+				parse = re.compile(r"^remove (?P<what>ignored|stalked) #(?P<rc>\w+\.\w+) (?P<who>.*)$", re.IGNORECASE)
+				what = parse.search(cmd).group('what').lower()
+				rc = '#' + parse.search(cmd).group('rc').strip()
+				if config.has_section(rc):
+					who = parse.search(cmd).group('who').strip()
+					self.removeFromList(who, rc, what, target)
+		elif cmd.startswith('huggle'):#Huggle
+			parse = re.compile(r"^huggle (?P<who>.*)$", re.IGNORECASE)
+			who = parse.search(cmd).group('who')
+			self.connection.action(self.channel, 'huggles ' + who)
 		elif cmd.startswith('die'):#Die
 			if self.getCloak(e.source()) not in config.get('Setup', 'owner').split('<|>'):
 				self.msg('You can\'t kill me; you\'re not my owner!', nm_to_n(e.source()))
@@ -319,7 +325,6 @@ class FreenodeBot(SingleServerIRCBot):
 	def setConfig(self, section, option, value):
 		print 'setConfig(self, \'%s\', \'%s\', \'%s\')' % (section, option, value)
 		config.set(section, option, value)
-
 	def addToList(self, who, section, groupname, target):
 		print 'addToLost(self, \'%s\', \'%s\', \'%s\', \'%s\')' % (who, section, groupname, target)
 		if who == '' or who == ' ':
@@ -375,7 +380,7 @@ class WikimediaBot(SingleServerIRCBot):
 
 	def on_ctcp(self, c, e):
 		if e.arguments()[0] == 'VERSION':
-			c.ctcp_reply(nm_to_n(e.source()), 'Bot for watching stuff in ' + channel)
+			c.ctcp_reply(nm_to_n(e.source()), 'Bot for watching spam stuff in ' + channel)
 		elif e.arguments()[0] == 'PING':
 			if len(e.arguments()) > 1: c.ctcp_reply(nm_to_n(e.source()),"PING " + e.arguments()[1])
 		
@@ -397,7 +402,7 @@ class WikimediaBot(SingleServerIRCBot):
 			rcpage = found.group('page').strip(" ")
 			watched = False
 			for pg in config.get(e.target(), 'stalked').split('<|>'):
-				if pg == rcpage:
+				if (pg == rcpage) or rcpage.startswith('User:COIBot/XWiki'): #Is this really what we want here? Perhaps make the stalklist regex.
 					watched = True
 					break
 			if not watched:
@@ -460,4 +465,3 @@ if __name__ == "__main__":
 		bot1.die()
 		rcreader.die()
 		sys.exit()
-

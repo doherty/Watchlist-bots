@@ -49,7 +49,7 @@ class FreenodeBot(SingleServerIRCBot):
 		nick = nm_to_n(e.source())
 		who = '<%s/%s>' % (e.target(), nick)
 		a = e.arguments()[0]
-##        print timestamp+" * "+who+a
+##		  print timestamp+" * "+who+a
 		
 	def on_privmsg(self, c, e):
 		timestamp = '[%s] ' % time.strftime('%d.%m.%Y %H:%M:%S', time.localtime(time.time()))
@@ -68,7 +68,7 @@ class FreenodeBot(SingleServerIRCBot):
 				command = a[1].strip()
 				if self.getCloak(e.source()) in config.get('Setup', 'privileged').split('<|>'):
 					try:
-                        print 'Command from %s: %s' % (who, command)
+						print 'Command from %s: %s' % (who, command)
 						self.do_command(e, command, target)
 					except:
 						print 'Error: %s' % sys.exc_info()[1]
@@ -91,7 +91,7 @@ class FreenodeBot(SingleServerIRCBot):
 				command = a[1].strip()
 				if self.getCloak(e.source()) in config.get('Setup', 'privileged').split('<|>'):
 					try:
-                        print 'Command from %s: %s' % (who, command)
+						print 'Command from %s: %s' % (who, command)
 						self.do_command(e, command, target)
 					except:
 						print 'Error: %s' % sys.exc_info()[1]
@@ -352,7 +352,7 @@ class FreenodeBot(SingleServerIRCBot):
 			self.msg('%s removed from %s.' % (who, groupname), target)
 
 	def msg(self, message, target=None):
-##        print 'msg(self, \'%s\', \'%s\')' % (message, target)
+##		  print 'msg(self, \'%s\', \'%s\')' % (message, target)
 		if not target:
 			target = self.channel
 		self.connection.privmsg(target, message)
@@ -425,7 +425,7 @@ class WikimediaBot(SingleServerIRCBot):
 				rccomment=re.sub("/\*(.+?)\*/", "", rccomment.strip(" "))
 				if rccomment.replace(" ", "") == "": comment=""
 				else: comment=" \x0307(" + rccomment.strip(" ") + ")\x03"
-			bot1.msg("\x0303%s\x03 edited \x0310[[:%s:%s%s]]\x03 \x0302http://%s/wiki/?diff=prev&oldid=%s\x03%s" % (rcuser, config.get(e.target(), 'iwprefix'), rcpage, section, config.get(e.target(), 'domain'),  rcdiff, comment))
+			bot1.msg("\x0303%s\x03 edited \x0310[[:%s:%s%s]]\x03 \x0302http://%s/wiki/?diff=prev&oldid=%s\x03%s" % (rcuser, config.get(e.target(), 'iwprefix'), rcpage, section, config.get(e.target(), 'domain'),	rcdiff, comment))
 			
 class BotThread(threading.Thread):
 	def __init__ (self, bot):
@@ -438,7 +438,7 @@ class BotThread(threading.Thread):
 	def startbot(self, bot):
 		bot.start()
 
-def main():  
+def main():	 
 	global bot1, rcreader, config
 	config = ConfigParser.ConfigParser()
 	config.read(os.path.expanduser('~/Watchlist-bots/BLWatcher.ini'))
@@ -459,7 +459,7 @@ def main():
 
 if __name__ == "__main__":
 	global bot1, rcreader, config
-#    main()
+#	 main()
 	try:
 		main()
 	except:
@@ -467,4 +467,3 @@ if __name__ == "__main__":
 		bot1.die()
 		rcreader.die()
 		sys.exit()
-

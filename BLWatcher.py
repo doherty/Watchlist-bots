@@ -277,7 +277,7 @@ class FreenodeBot(SingleServerIRCBot):
 				rcreader.connection.quit()
 				rcreader.disconnect()
 				print 'Killed. Now exiting...'
-				os._exit(os.EX_OK)
+				sys.exit(0)
 		elif cmd.startswith('restart'):
 			if self.getCloak(e.source()) not in config.get('Setup', 'owner').split('<|>'):
 				self.msg('You can\'t restart me; you\'re not my owner!', target)

@@ -424,7 +424,7 @@ class WikimediaBot(SingleServerIRCBot):
                 rccomment=re.sub("/\*(.+?)\*/", "", rccomment.strip(" "))
                 if rccomment.replace(" ", "") == "": comment=""
                 else: comment=" \x0307(" + rccomment.strip(" ") + ")\x03"
-            bot1.msg("\x0303%s\x03 edited \x0310[[:%s:%s%s]]\x03 \x0302http://%s/wiki/?diff=prev&oldid=%s\x03%s" % (rcuser, config.get(e.target(), 'iwprefix'), rcpage, section, config.get(e.target(), 'domain'),  rcdiff, comment))
+            bot1.msg("\x0303%s\x03 edited \x0310[[:%s:%s%s]]\x03 \x0302http://%s/wiki/?diff=%s\x03%s" % (rcuser, config.get(e.target(), 'iwprefix'), rcpage, section, config.get(e.target(), 'domain'),  rcdiff, comment))
             
 class BotThread(threading.Thread):
     def __init__ (self, bot):

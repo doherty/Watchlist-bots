@@ -1,0 +1,117 @@
+#IRC-Watchbot#
+
+**BLWatcher** notifies [`#wikimedia-external-links`](irc://irc.freenode.net/wikimedia-external-links) of relevant edits to the [anti-spam](http://meta.wikimedia.org/wiki/Talk:Spam_blacklist) workspace.
+
+**The_Hawk** notifies [`#wikibooks`](irc://irc.freenode.net/wikibooks) of relevant edits to vandalism-related and administrative pages.
+
+**BiblioBot** notifies [`#cvn-wp-es`](irc://irc.freenode.net/cvn-wp-es) of relevant edits to vandalism-related and administrative pages.
+
+**sourceybot** notifies [`#wikisource`](irc://irc.freenode.net/wikisource) of relevant edits to vandalism-related and administrative pages.
+
+##Commands##
+
+You need to be a privileged user to be able to use these commands. Note that the commands start with the bot's nickname, whatever it is, plus a colon (tab-complete should format this properly). `BLWatcher:` is used for these examples.
+
+<table class="wikitable" style="font-size:85%">
+<tr>
+<th> Command </th><th> Description </th><th> Example
+</th></tr>
+<tr>
+<td>!admin</td>
+<td>Ping admins - in case of vandalism, for example</td>
+<td>!admin 127.0.0.1 is spamming spam.org cross-wiki</td>
+</tr>
+<tr>
+<td>BLWatcher: test</td>
+<td>Test if the bot is alive</td>
+<td> BLWatcher: test</td>
+</tr>
+<tr>
+<td>BLWatcher: report list</td>
+<td>List the report levels per channel</td>
+<td> BLWatcher: report list</td>
+</tr>
+<tr>
+<td>BLWatcher: report all <i>(True|False)</i></td>
+<td>Set the report level for all channels to either True or False</td>
+<td> BLWatcher: report all True</td>
+</tr>
+<tr>
+<td>BLWatcher: report metaonly*</td>
+<td>Set the report level for all channels except #meta.wikimedia to False</td>
+<td>BLWatcher: report metaonly*<br/>
+<small><i>*enonly for The_Hawk; esonly for BiblioBot; enonly for sourceybot</i></small></td>
+</tr>
+<tr>
+<td>BLWatcher: report <i>[channel]</i> <i>[True|False]</i></td>
+<td>Set the report level for <i>channel</i> to True or False</td>
+<td>BLWatcher: report #meta.wikimedia True</td>
+</tr>
+<tr>
+<td>BLWatcher: (add|remove|list) privileged <i>[cloak]</i></td>
+<td>Add/remove/list the privileged cloaks</td>
+<td>BLWatcher: add privileged wikimedia/mikelifeguard</td>
+</tr>
+<tr>
+<td>BLWatcher: (add|remove|list) ignored <i>[channel]</i> <i>[username]<i></td>
+<td>Add/remove/list the ignored users on the specified wiki</td>
+<td>BLWatcher: list ignored #meta.wikimedia<br />
+BLWatcher: remove ignored #meta.wikimedia Mike.lifeguard</td>
+</tr>
+<tr>
+<td>BLWatcher: (add|remove|list) wiki <i>[channel]</i> </td>
+<td>Add/remove/list the wikis the bot watches</td>
+<td>BLWatcher: list wiki<br />BLWatcher: add wiki #meta.wikimedia</td>
+</tr>
+<tr>
+<td>BLWatcher: (add|remove|list) optin <i>[nick]</i></td>
+<td>Add/remove/list users who have opted in for the !admin command</td>
+<td> BLWatcher: add optin Mike_lifeguard</td>
+</tr>
+<tr>
+<td>BLWatcher: (add|remove|list) stalked <i>[channel]</i></td>
+<td>Add/remove/list stalked pages on the specified wiki</td>
+<td>BLWatcher: add stalked #meta.wikimedia Talk:Spam blacklist<br />
+BLWatcher: list stalked #meta.wikimedia</td>
+</tr>
+<!--<tr><td align="center" colspan="3"><b>For <i>list</i> commands, don't provide a (page|user|channel).</b></td></tr>-->
+<tr>
+<td align="center" colspan="3">The following commands are restricted to the 'owners'. These users also have shell access.</td>
+</tr>
+<tr>
+<th>Restricted command </th><th> Description</th>
+<th>Example</th>
+</tr>
+<tr>
+<td>BLWatcher: restart</td>
+<td>Restart the bot</td>
+<td>BLWatcher: restart</td>
+</tr>
+<tr>
+<td>BLWatcher: restart rc</td>
+<td>Restart the <a href="http://meta.wikimedia.org/wiki/Help:Recent_changes">RC</a> reader</td>
+<td>BLWatcher: restart rc</td>
+</tr>
+<tr>
+<td>BLWatcher: die</td>
+<td>Kill all the bots</td>
+<td>BLWatcher: die<span style="color:grey;">*</span></td>
+</tr>
+<tr>
+<td align="center" colspan="3"><span style="color:grey;">*Note that the bot uses <a href="https://wiki.toolserver.org/view/Cron">cron</a> and <a 
+href="https://wiki.toolserver.org/view/Phoenix">Phoenix</a> to stay up - if you kill it, it will come back in <a href="/~stewardbots/docs/crontab-solaris">about 10 minutes</a>. Use this for a hard restart in case the soft restart above fails.</span></td>
+</tr>
+<tr>
+<td align="center" colspan="3">The following command is restricted to the developer; currently that's <code><a href="http://meta.wikimedia.org/wiki/User:Mike.lifeguard">wikimedia/mikelifeguard</a>.</td>
+</tr>
+<tr>
+<th>Restricted command</th>
+<th>Description</th>
+<th>Example</th></tr>
+<tr>
+<td>BLWatcher: (add|remove|list) owner <i>[cloak]</i></td>
+<td>Add/remove/list owners</td>
+<td>BLWatcher: list owner<br />
+BLWatcher: add owner <i>wikimedia/mikelifeguard</i></td>
+</tr>
+</table>

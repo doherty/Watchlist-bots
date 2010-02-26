@@ -20,12 +20,12 @@ class FreenodeBot(SingleServerIRCBot):
 		self.nickname = nickname
 		self.password = password
 		self.version = '1.5'
-		
+
 	def on_error(self, c, e):
 		print 'Error:\nArguments: %s\nTarget: %s' % (e.arguments(), e.target())
 		self.die()
 		sys.exit()
-	
+
 	def on_nicknameinuse(self, c, e):
 		c.nick(c.get_nickname() + "_")
 		c.privmsg("NickServ",'GHOST %s %s' % (self.nickname, self.password))
@@ -50,7 +50,7 @@ class FreenodeBot(SingleServerIRCBot):
 		who = '<%s/%s>' % (e.target(), nick)
 		a = e.arguments()[0]
 ##        print timestamp+" * "+who+a
-		
+
 	def on_privmsg(self, c, e):
 		timestamp = '[%s] ' % time.strftime('%d.%m.%Y %H:%M:%S', time.localtime(time.time()))
 		nick = nm_to_n(e.source())
@@ -72,7 +72,7 @@ class FreenodeBot(SingleServerIRCBot):
 					except:
 						print 'Error: %s' % sys.exc_info()[1]
 						self.msg('You have to follow the proper syntax. See \x0302http://toolserver.org/~stewardbots/IRC-watchbot\x03', nick)
-		
+
 	def on_pubmsg(self, c, e):
 		timestamp = '[%s] ' % time.strftime('%d.%m.%Y %H:%M:%S', time.localtime(time.time()))
 		nick = nm_to_n(e.source())
@@ -94,7 +94,7 @@ class FreenodeBot(SingleServerIRCBot):
 					except:
 						print 'Error: %s' % sys.exc_info()[1]
 						self.msg('You have to follow the proper syntax. See \x0302http://toolserver.org/~stewardbots/IRC-watchbot\x03', nick)
-			
+
 	def do_command(self, e, cmd, target):
 		nick = nm_to_n(e.source())
 		c = self.connection
@@ -362,7 +362,7 @@ class FreenodeBot(SingleServerIRCBot):
 		if not target:
 			target = self.channel
 		self.connection.privmsg(target, message)
-	
+
 	def getCloak(self, doer):
 		print 'getCloak(self, \'%s\')' % doer
 		if re.search('@', doer):
@@ -378,7 +378,7 @@ class WikimediaBot(SingleServerIRCBot):
 	def on_error(self, c, e):
 		print e.target()
 		#self.die()
-	
+
 	def on_nicknameinuse(self, c, e):
 		c.nick(c.get_nickname() + '_')
 
@@ -391,16 +391,16 @@ class WikimediaBot(SingleServerIRCBot):
 			c.ctcp_reply(nm_to_n(e.source()), 'Bot for watching stuff in ' + channel)
 		elif e.arguments()[0] == 'PING':
 			if len(e.arguments()) > 1: c.ctcp_reply(nm_to_n(e.source()),"PING " + e.arguments()[1])
-		
+
 	def on_pubmsg(self, c, e):
 		timestamp = '[%s] ' % time.strftime("%d.%m.%Y %H:%M:%S", time.localtime(time.time()))
 		who = '<%s/%s> ' % (e.target(), nm_to_n(e.source()))
 		a = (e.arguments()[0])
 		nick = nm_to_n(e.source())
-		
+
 		if not config.has_section(e.target()):
 			return
-			
+
 		if config.get(e.target(), 'report') == 'True':
 			#Parsing the rcbot output
 			comp = re.compile("\\x0314\[\[\\x0307(?P<page>.+?)\\x0314\]\](.+?)diff=(?P<diff>[0-9]+)&oldid=(.+?)\\x03 \\x035\*\\x03 \\x0303(?P<user>.+?)\\x03 \\x035\*\\x03 \((.+?)\) \\x0310(?P<comment>.*)\\x03", re.DOTALL)
@@ -432,7 +432,7 @@ class WikimediaBot(SingleServerIRCBot):
 				if rccomment.replace(" ", "") == "": comment=""
 				else: comment=" \x0307(" + rccomment.strip(" ") + ")\x03"
 			bot1.msg("\x0303%s\x03 edited \x0310[[:%s:%s%s]]\x03 \x0302http://%s/wiki/?diff=%s\x03%s" % (rcuser, config.get(e.target(), 'iwprefix'), rcpage, section, config.get(e.target(), 'domain'),  rcdiff, comment))
-			
+
 class BotThread(threading.Thread):
 	def __init__ (self, bot):
 		self.b=bot
@@ -444,8 +444,8 @@ class BotThread(threading.Thread):
 	def startbot(self, bot):
 		bot.start()
 
-def main():  
-	global bot1, rcreader, config    
+def main():
+	global bot1, rcreader, config
 	config = ConfigParser.ConfigParser()
 	config.read(os.path.expanduser('~/Watchlist-bots/BiblioBot.ini'))
 	nickname = config.get('Setup', 'nickname')

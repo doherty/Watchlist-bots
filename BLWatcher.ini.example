@@ -4,7 +4,7 @@ optin = Mike_lifeguard<|>Beetstra<|>erwin85
 server = irc.freenode.net
 wmserver = irc.wikimedia.org
 owner = wikimedia/mikelifeguard
-password = 
+password =
 nickname = BLWatcher
 privileged = wikimedia/mikelifeguard<|>wikimedia/nixeagle<|>wikimedia/beetstra<|>wikimedia/dferg
 channel = #wikimedia-external-links
@@ -20,26 +20,26 @@ report = True
 [#de.wikipedia]
 stalked = MediaWiki:Spam-blacklist<|>MediaWiki Diskussion:Spam-blacklist
 domain = de.wikipedia.org
-ignored = 
+ignored =
 iwprefix = w:de
 report = True
 
 [#it.wikipedia]
-ignored = 
+ignored =
 domain = it.wikipedia.org
 stalked = MediaWiki:Spam-blacklist<|>Discussioni MediaWiki:Spam-blacklist
 iwprefix = w:it
 report = True
 
 [#nl.wikipedia]
-ignored = 
+ignored =
 domain = nl.wikipedia.org
 stalked = MediaWiki:Spam-blacklist<|>Overleg MediaWiki:Spam-blacklist<|>Wikipedia:Verzoekpagina voor moderatoren/Spam-blacklist
 iwprefix = w:nl
 report = True
 
 [#en.wikipedia]
-ignored = 
+ignored =
 domain = en.wikipedia.org
 stalked = MediaWiki:Spam-blacklist<|>MediaWiki talk:Spam-blacklist<|>Wikipedia talk:WikiProject Spam
 iwprefix = w:en

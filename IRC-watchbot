@@ -98,7 +98,7 @@ BLWatcher: list stalked #meta.wikimedia</td>
 <td>BLWatcher: die<span style="color:grey;">*</span></td>
 </tr>
 <tr>
-<td align="center" colspan="3"><span style="color:grey;">*Note that the bot uses <a href="https://wiki.toolserver.org/view/Cron">cron</a> and <a 
+<td align="center" colspan="3"><span style="color:grey;">*Note that the bot uses <a href="https://wiki.toolserver.org/view/Cron">cron</a> and <a
 href="https://wiki.toolserver.org/view/Phoenix">Phoenix</a> to stay up - if you kill it, it will come back in <a href="/~stewardbots/docs/crontab-solaris">about 10 minutes</a>. Use this for a hard restart in case the soft restart above fails.</span></td>
 </tr>
 <tr>

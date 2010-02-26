@@ -4,14 +4,14 @@ help = Este bot controla los cambios de páginas importantes en Wikipedia en Esp
 server = irc.freenode.net
 wmserver = irc.wikimedia.org
 owner = wikimedia/mikelifeguard
-password = 
+password =
 privileged = wikimedia/mikelifeguard<|>Wikimedia/Dferg
 channel = #cvn-wp-es
 optin = Mike_lifeguard<|>Dferg
 quitmsg = Adiós!
 
 [#es.wikipedia]
-ignored = 
+ignored =
 domain = es.wikipedia.org
 stalked = Wikipedia:Vandalismo en curso<|>Wikipedia:Tablón de anuncios de los bibliotecarios/Portal/Archivo/3RR/Actual<|>Wikipedia:Tablón de anuncios de los bibliotecarios/Portal/Archivo/Violaciones de etiqueta/Actual<|>Wikipedia:Tablón de anuncios de los bibliotecarios/Portal/Archivo/Protección de artículos/Actual<|>Wikipedia:Tablón de anuncios de los bibliotecarios/Portal/Archivo/Solicitudes de restauración/Actual<|>Wikipedia:Tablón de anuncios de los bibliotecarios/Portal/Archivo/Miscelánea/Actual
 iwprefix = w:es

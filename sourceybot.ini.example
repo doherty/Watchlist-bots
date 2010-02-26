@@ -1,10 +1,10 @@
 [Setup]
 help = This bot watches important pages on Wikisource. The manual is located at http://toolserver.org/~stewardbots/IRC-watchbot
-optin = 
+optin =
 server = irc.freenode.net
 wmserver = irc.wikimedia.org
 owner = wikimedia/mikelifeguard
-password = 
+password =
 nickname = sourceybot
 privileged = wikimedia/mikelifeguard
 channel = #wikisource
@@ -13,6 +13,6 @@ quitmsg = Goodbye!
 [#en.wikisource]
 ignored = MiszaBot<|>CommonsDelinker
 domain = en.wikisource.org
-stalked = 
+stalked =
 iwprefix = s:en
 report = True
